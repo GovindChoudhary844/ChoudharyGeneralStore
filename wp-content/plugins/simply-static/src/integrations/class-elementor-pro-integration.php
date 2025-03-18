@@ -12,17 +12,12 @@ class Elementor_Pro_Integration extends Integration {
 	 */
 	protected $id = 'elementor-pro';
 
-	public function __construct() {
-		$this->name = __( 'Elementor Pro', 'simply-static' );
-		$this->description = __( 'Exports assets required for Elementor Pro widgets and prepares data used by them.', 'simply-static' );
-	}
-
 	/**
-	 * Return if the dependency is active.
+	 * Can this integration run?
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	public function dependency_active() {
+	public function can_run() {
 		return defined( 'ELEMENTOR_PRO_VERSION' );
 	}
 
@@ -51,11 +46,10 @@ class Elementor_Pro_Integration extends Integration {
 	 */
 	public function register_assets() {
 		$file_urls   = [];
-		//$bundle_urls = $this->get_bundle_files();
+		$bundle_urls = $this->get_bundle_files();
 		$lib_urls    = $this->get_lib_files();
-		//$file_urls   = array_merge( $file_urls, $bundle_urls );
+		$file_urls   = array_merge( $file_urls, $bundle_urls );
 		$file_urls   = array_merge( $file_urls, $lib_urls );
-        $file_urls   = array_merge( $file_urls, $this->get_files_in_url( 'js' ) );
 		$file_urls   = array_merge( $file_urls, $this->get_files_in_url( 'css' ) );
 		$file_urls   = array_merge( $file_urls, $this->get_files_in_url( 'images' ) );
 		$file_urls   = array_merge( $file_urls, $this->get_files_in_url( 'mask-shapes' ) );
@@ -82,11 +76,6 @@ class Elementor_Pro_Integration extends Integration {
 		$urls = [];
 
 		foreach ( $only_bundle_min as $minified_file ) {
-			// If file size is empty, skip it.
-			if ( ! filesize( $minified_file ) ) {
-				continue;
-			}
-
 			$urls[] = trailingslashit( ELEMENTOR_PRO_URL ) . 'assets/js/' . $minified_file;
 		}
 
@@ -103,11 +92,6 @@ class Elementor_Pro_Integration extends Integration {
 		$urls  = [];
 
 		foreach ( $files as $file ) {
-			// If file size is empty, skip it.
-			if ( ! filesize( $file ) ) {
-				continue;
-			}
-
 			$urls[] = str_replace( trailingslashit( ELEMENTOR_PRO_PATH ), trailingslashit( ELEMENTOR_PRO_URL ), $file );
 		}
 
